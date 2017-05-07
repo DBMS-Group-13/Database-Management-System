@@ -1,0 +1,51 @@
+<RCC>
+    <qresource prefix="/Login/gif">
+        <file>resources/LoginB.gif</file>
+    </qresource>
+    <qresource prefix="/login/button">
+        <file>resources/close.jpg</file>
+        <file>resources/close_hover.jpg</file>
+        <file>resources/close_press.jpg</file>
+        <file>resources/sign.jpg</file>
+        <file>resources/sign_hover.jpg</file>
+        <file>resources/sign_press.jpg</file>
+    </qresource>
+    <qresource prefix="/login/jpg">
+        <file>resources/logo.png</file>
+    </qresource>
+    <qresource prefix="/mainWindow/jpg">
+        <file>resources/mainTitle.jpg</file>
+        <file>resources/status.jpg</file>
+        <file>resources/branch-closed.png</file>
+        <file>resources/branch-end.png</file>
+        <file>resources/branch-more.png</file>
+        <file>resources/branch-open.png</file>
+        <file>resources/vline.png</file>
+    </qresource>
+    <qresource prefix="/mainWindow/png">
+        <file>resources/titleText.png</file>
+        <file>resources/open.png</file>
+        <file>resources/open_hover.png</file>
+        <file>resources/create.png</file>
+        <file>resources/create_hover.png</file>
+        <file>resources/addTable.png</file>
+        <file>resources/addTable_hover.png</file>
+        <file>resources/addTable_pressed.png</file>
+    </qresource>
+    <qresource prefix="/createDB/jpg">
+        <file>resources/createDB.jpg</file>
+        <file>resources/createDB_press.jpg</file>
+    </qresource>
+    <qresource prefix="/createDB/png">
+        <file>resources/closePNG.png</file>
+    </qresource>
+    <qresource prefix="/createtable/jpg">
+        <file>resources/createTable.jpg</file>
+        <file>resources/createTable_pressed.jpg</file>
+    </qresource>
+    <qresource prefix="/delTable/png">
+        <file>resources/delTable.png</file>
+        <file>resources/delTable_hover.png</file>
+        <file>resources/delTable_pressed.png</file>
+    </qresource>
+</RCC>
