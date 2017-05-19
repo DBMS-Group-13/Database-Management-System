@@ -11,7 +11,7 @@ public: // create from serialization only
     ~service(void);
 
 DBARR m_arrDB;
-private:
+public:
     DBEntity* m_dbEntity;	// Database entity object
     QString m_strError;		// Exception information
     TABLEARR m_arrTable;	// Table array

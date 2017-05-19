@@ -16,8 +16,12 @@ public:
     QString GetTbDefineFile(const QString strDBName, const QString strTableName);
     // Get the path of the table record file
     QString GetTbRecordFile(const QString strDBName, const QString strTableName);
+    // Get the path of the table restraint file
+    QString GetTbConstrFile(const QString strDBName, const QString strTableName);
+    //删除文件目录
+    bool DeleteDirectory(const QString &path);
 
-private:
+public:
     // Change relative path into an absolute path.
     QString GetAbsolutePath(const QString strRelativePath);
 };
