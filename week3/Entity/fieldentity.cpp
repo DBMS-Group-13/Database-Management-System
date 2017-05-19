@@ -151,15 +151,12 @@ QDateTime FieldEntity::GetMTime()
 [Argument]	FieldEntity &fe: Field entity
 [ReturnedValue]	FieldEntity*: Pointer to the field
 ************************************************************************/
-void FieldEntity::AddConstr(int type, QString value)
+bool FieldEntity::AddConstr(int type, QString value)
 {
     // Add constraint condition
 
     m_arrconstr.insert(type,value);
 
-}
-
-QHash<int, QString>& FieldEntity::getConstrArr(){
-    return m_arrconstr;
+    return true;
 }
 

@@ -46,8 +46,7 @@ public:
     QDateTime GetMTime();
 
     //add function
-    void AddConstr(int type, QString value);
-    QHash<int, QString> & getConstrArr();
+    bool FieldEntity::AddConstr(int type, QString value);
 
 private:
     QString m_strName;  // Field name
