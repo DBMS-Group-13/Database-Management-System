@@ -17,9 +17,12 @@ public:
     // Retrieve all records from a specified table
     int SelectAll(TableEntity &te, RECORDARR &data);
 
+    //ÐÞ¸ÄºÍÉ¾³ý¼ÇÂ¼
+    bool ModifyAndDelete(TableEntity &te, RECORDARR &arrRe);
+
 public:
     // Save record
-    bool Write(QFile &file, TableEntity *te, RecordEntity *re);
+    bool Write(QTextStream &out, TableEntity *te, RecordEntity *re);
     // Get record
     bool Read(QTextStream &in
               , TableEntity &te, RecordEntity &re);

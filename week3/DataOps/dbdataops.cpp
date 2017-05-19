@@ -1,5 +1,6 @@
 ﻿#include "dbdataops.h"
 #include "./Global/ref.h"
+#include "./Logic/filelogic.h"
 
 
 DBDataOps::DBDataOps()
@@ -99,4 +100,82 @@ bool DBDataOps::GetDatabase(const QString strFilepath,DBARR &arrDB)
             delete p;  //释放动态内存
         }
         return false;
+}
+
+
+bool DBDataOps::ReName(DBEntity& olddb, DBEntity& newdb)
+{
+    //修改数据库文件夹名称
+    QString tb_oldfile=olddb.GetFilepath().append("/").append(olddb.GetName()).append(".tb");
+    QString tb_newfile=olddb.GetFilepath().append("/").append(newdb.GetName()).append(".tb");
+    QFile f(tb_oldfile);
+    //文件夹重命名用相对路径
+    f.rename(tb_oldfile,tb_newfile);
+    FileLogic fl;
+    QDir qdir(olddb.GetFilepath());
+    //文件夹重命名用绝对路径
+    qdir.rename(fl.GetAbsolutePath(olddb.GetFilepath()),fl.GetAbsolutePath(newdb.GetFilepath()));
+
+
+    //修改.db描述文件
+    QString db_file=QString("DBMS_ROOT/ruanko.db");
+    QFile file(db_file);
+    file.open(QIODevice::ReadWrite);
+    QDataStream inout(&file);
+    qint64 position=0;             //文件指针位置
+    char *p=new char[256];
+    bool boolAccept;
+    while(!inout.atEnd())
+    {
+        position=inout.device()->pos();  //记录每组数据头部的指针位置
+        inout>>p;
+        QString name=QString(p);
+        if(QString::compare(name,olddb.GetName())==0)
+        {
+            inout.device()->seek(position);
+            memcpy(p,newdb.GetCtTime().toString("yyyy-MM-dd hh:mm:ss").toLatin1().data(),256);
+            DatabaseBlock DBlock=newdb.GetBlock();
+            inout<<DBlock.name<<DBlock.type<<DBlock.filepath<<p;
+            break;
+        }
+        inout>>boolAccept;
+        inout>>p;
+        inout>>p;
+    }
+    file.close();
+    return true;
+}
+
+
+/**
+ * @brief DBDataOps::DeleteDB
+ * @param DBDirepath 数据库文件夹
+ * @param dbFilepath .db文件路径
+ * @param arrDB
+ * @return
+ */
+bool DBDataOps::DeleteDB(const QString DBDirepath,const QString dbFilepath, DBARR &arrDB)
+{
+    //删除数据库文件夹
+    FileLogic fl;
+    fl.DeleteDirectory(DBDirepath);
+
+    //修改.db文件
+    QFile file(dbFilepath);
+    file.open(QIODevice::Truncate|QIODevice::WriteOnly);
+    QDataStream out(&file);
+
+    char *c_CtTime=new char[256];
+    for(int i=0;i<arrDB.size();i++)
+    {
+        DBEntity* db=arrDB.value(i);
+        if(db!=NULL)
+        {
+            DatabaseBlock DBlock=db->GetBlock();
+            strcpy(c_CtTime,DBlock.crtimAe.toString("yyyy-MM-dd hh:mm:ss").toLatin1().data());
+            out<<DBlock.name<<DBlock.type<<DBlock.filepath<<c_CtTime;
+        }
+    }
+    file.close();
+    return true;
 }

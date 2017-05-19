@@ -11,6 +11,11 @@ public:
     bool Create(const QString strFilepath, DBEntity db, bool bAppend = true);
     // 读取数据库信息
     bool GetDatabase(const QString strFilepath,DBARR &arrDB);
+
+    //重命名数据库
+    bool ReName(DBEntity &olddb, DBEntity &newdb);
+    //删除数据库
+    bool DeleteDB(const QString DBDirepath,const QString dbFilepath, DBARR &arrDB);
 };
 
 #endif // DBDATAOPS_H

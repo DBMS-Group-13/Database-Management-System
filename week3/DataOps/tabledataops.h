@@ -3,6 +3,7 @@
 #include ".\Entity\TableEntity.h"
 #include ".\Entity\FieldEntity.h"
 #include ".\Util\Appexception.h"
+#include ".\Entity\RecordEntity.h"
 #include<qexception.h>
 #include<QString>
 #include <qtextstream.h>
@@ -26,9 +27,12 @@ public:
     // Alert table
     bool AlterTable(const QString strFilePath, TableEntity *te);
     // Alert table name
-    bool AlterTableName(const QString strFilePath,const QString TableName, TableEntity *te);
+    bool TableDataOps::AlterTableName(const QString strFilePath,const QString TableName, TableEntity *te);
     // Get constraint condition
-    bool GetConstr(const QString strFilePath, TableEntity *te);
+    bool TableDataOps::GetConstr(const QString strFilePath, TableEntity *te);
+
+    bool delField(TableEntity *te,RECORDARR &arrRe);
+    bool delTable(TABLEARR &arrtab,const QString tbFilePath,const QString DirPath);
 private:
     QByteArray ba;
 };
