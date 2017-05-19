@@ -24,7 +24,7 @@ bool RecordDataOps::Insert(TableEntity &te, RecordEntity &re)
             //out.seek(file.size());  //光标指向文尾
 
             // Save record
-            Write(file, &te, &re);
+            Write(out, &te, &re);
 
             // Close file
             file.close();
@@ -94,13 +94,12 @@ int RecordDataOps::SelectAll(TableEntity &te, RECORDARR &data)
         CRecordEntity &re: Record information entity
 [ReturnedValue]	bool: True if the operation is successful;otherwise false.
 **************************************************/
-bool RecordDataOps::Write(QFile &file, TableEntity *te, RecordEntity *re)
+bool RecordDataOps::Write(QTextStream &out, TableEntity *te, RecordEntity *re)
 {
     try
         {
             // Get field number and save the value of each field  one by one.
             int nFieldNum = te->GetFieldNum();
-            QTextStream out(&file);
             for(int i = 0; i < nFieldNum; i++)
             {
                 // Get field information.
@@ -200,3 +199,32 @@ bool RecordDataOps::Read(QTextStream &in, TableEntity &te, RecordEntity &re)
 
         return false;
 }
+
+bool RecordDataOps::ModifyAndDelete(TableEntity &te, RECORDARR &arrRe)
+{
+    try
+        {
+            QFile file(te.GetTrdPath());   //打开文件
+            if (file.open(QIODevice::WriteOnly|QIODevice::Truncate) == FALSE)
+            {
+                return false;
+            }
+            QTextStream out(&file);
+
+            for(int i=0;i<arrRe.size();i++)
+            {
+                RecordEntity* re=arrRe.value(i);
+                if(re!=NULL)
+                    Write(out,&te,re);
+            }
+
+            file.close();
+        }
+        catch (QString Exception)
+        {
+            throw new AppException(QString::fromLocal8Bit ("Failed to save record!"));
+        }
+
+        return false;
+}
+

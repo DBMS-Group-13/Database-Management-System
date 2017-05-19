@@ -21,7 +21,6 @@ public:
     void SetRecordNum(int nNum);
     void SetTdfPath(const QString strTdfPath);
     void SetTrdPath(const QString strTrdPath);
-    void SetTicPath(const QString strTrdPath);
     void SetCrTime(QDateTime tTime);
     void SetMTime(QDateTime tTime);
 
@@ -31,7 +30,6 @@ public:
     int GetFieldNum();
     QString GetTdfPath();
     QString GetTrdPath();
-    QString GetTicPath();
     QDateTime GetCrTime();
     QDateTime GetMTime();
 
@@ -42,7 +40,6 @@ private:
     int m_nRecordNum;		// Record number
     QString m_strTdfPath;	// Tath of table definition file
     QString m_strTrdPath;	// Path of record file
-    QString m_strTicPath;   // Path of tic file
     QDateTime m_tCrTime;	// Table creation time
     QDateTime m_tMTime;	// Last modification time
 

@@ -124,6 +124,24 @@ QString FileLogic::GetTbRecordFile(const QString strDBName, const QString strTab
     return strPath;
 }
 
+QString FileLogic::GetTbConstrFile(const QString strDBName, const QString strTableName)
+{
+    QString strPath = _T("");
+    try
+    {
+        strPath=QString("./DBMS_ROOT/data/%1/%2/%3.tic").arg(strDBName, strTableName,strTableName);
+    }
+    catch (AppException* e)
+    {
+        throw e;
+    }
+    catch (...)
+    {
+        throw new AppException("Failed to get the path of the table record file!");
+    }
+
+    return strPath;
+}
 /************************************************************************
 [FunctionName]	GetAbsolutePath
 [Function]	Change relative path into an absolute path.
@@ -136,5 +154,29 @@ QString FileLogic::GetAbsolutePath(const QString strRelativePath)
     QDir qDir;
     strFolder=qDir.absoluteFilePath(strRelativePath);
     return strFolder;
+}
+
+/*
+ * 遍历文件夹逐个删除文件。返回true表示文件夹不存在或被成功删除。
+ */
+bool FileLogic::DeleteDirectory(const QString &path)
+{
+    if (path.isEmpty())
+        return false;
+
+    QDir dir(path);
+    if(!dir.exists())
+        return true;
+
+    dir.setFilter(QDir::AllEntries | QDir::NoDotAndDotDot);
+    QFileInfoList fileList = dir.entryInfoList();
+    foreach (QFileInfo fi, fileList)
+    {
+        if (fi.isFile())
+            fi.dir().remove(fi.fileName());
+        else
+            DeleteDirectory(fi.absoluteFilePath());
+    }
+    return dir.rmpath(dir.absolutePath());
 }
 

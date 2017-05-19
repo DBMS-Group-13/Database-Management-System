@@ -60,7 +60,6 @@ TableBlock TableEntity::GetBlock()
     tb.record_num = m_nRecordNum;
     strcpy(tb.tdf,m_strTdfPath.toLatin1().data());
     strcpy(tb.trd,m_strTrdPath.toLatin1().data());
-    strcpy(tb.trd,m_strTicPath.toLatin1().data());
     tb.crtime = m_tCrTime;
     tb.mtime = m_tMTime;
     return tb;
@@ -78,7 +77,6 @@ void TableEntity::SetBlock(TableBlock tb)
     m_nRecordNum = tb.record_num;
     m_strTdfPath = tb.tdf;
     m_strTrdPath = tb.trd;
-    m_strTicPath = tb.tic;
     m_tCrTime = tb.crtime;
     m_tMTime = tb.mtime;
 }
@@ -103,11 +101,6 @@ void TableEntity::SetTdfPath( const QString strTdfPath )
 void TableEntity::SetTrdPath( const QString strTrdPath )
 {
     m_strTrdPath = strTrdPath;
-}
-
-void TableEntity::SetTicPath( const QString strTrdPath )
-{
-    m_strTicPath = strTrdPath;
 }
 
 void TableEntity::SetCrTime(QDateTime tTime)
@@ -145,11 +138,6 @@ QString TableEntity::GetTdfPath()
 QString TableEntity::GetTrdPath()
 {
     return m_strTrdPath;
-}
-
-QString TableEntity::GetTicPath()
-{
-    return m_strTicPath;
 }
 
 QDateTime TableEntity::GetCrTime()

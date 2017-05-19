@@ -1,4 +1,7 @@
 #include "tabledataops.h"
+#include "./Logic/filelogic.h"
+#include "./Entity/recordentity.h"
+
 TableDataOps::TableDataOps()
 {
 
@@ -114,17 +117,12 @@ bool TableDataOps::AddConstr(const QString strFilePath, FieldEntity *fe)
             FieldBlock fb = fe->GetBlock();
 
             //获取遍历器
-            /*QHashIterator<int, QString> i(fe->getConstrArr());
+            QHashIterator<int, QString> i(fe->m_arrconstr);
                while (i.hasNext()) {
-                   i.next();
                    strcpy(c_Value,i.value().toLatin1().data());
-                   out <<fb.name <<i.key()<<c_Value;  //格式：字段名+约束类型+默认值（没有的话写入"null"）
-               }*/
-            QHash<int,QString>::const_iterator i;
-            for(i = fe->getConstrArr().constBegin();i != fe->getConstrArr().constEnd();++i){
-                strcpy(c_Value,i.value().toLatin1().data());
-                out <<fb.name <<i.key()<<c_Value;  //格式：字段名+约束类型+默认值（没有的话写入"null"）
-            }
+                   out <<fb.name <<i.key()<<i.value();  //格式：字段名+约束类型+默认值（没有的话写入"null"）
+               }
+
             // Close file
             file.close();
             return true;
@@ -282,7 +280,7 @@ bool TableDataOps::GetConstr(const QString strFilePath, TableEntity *te)
                     Value = p;
                     if (QString::compare(strFieldName,str,Qt::CaseInsensitive) == 0)
                     {
-                        pField->getConstrArr().insert(type,Value);
+                        pField->m_arrconstr.insert(type,Value);
                     }
                 }
 
@@ -433,3 +431,106 @@ bool TableDataOps::AlterTableName(const QString strFilePath, const QString Table
         }
         return false;
 }
+
+bool TableDataOps::delField(TableEntity *te,RECORDARR &arrRe)
+{
+    //删除tdf文件中字段
+    QFile tdfFile(te->GetTdfPath());
+    tdfFile.open(QIODevice::Truncate|QIODevice::WriteOnly);
+    QDataStream tdf_out(&tdfFile);
+    char* c_Crtime;
+    FIELDARRAY arrfield=te->m_arrFields;
+    for(int i=0;i<arrfield.size();i++)
+    {
+        FieldEntity* field=arrfield.value(i);
+        if(field!=NULL)
+        {
+            c_Crtime = new char[256];
+            FieldBlock fb = field->GetBlock();
+            strcpy(c_Crtime,fb.mtime.toString("yyyy-MM-dd hh:mm:ss").toLatin1().data());
+            tdf_out <<fb.name<<fb.type<<fb.param<<c_Crtime<<fb.integrities;
+        }
+    }
+    delete c_Crtime;
+    tdfFile.flush();
+    tdfFile.close();
+
+    //修改trd记录文件
+    QFile trdFile(te->GetTrdPath());
+    trdFile.open(QIODevice::Truncate|QIODevice::WriteOnly);
+    QTextStream out(&trdFile);
+
+    int nFieldNum = te->GetFieldNum();  //字段数量
+
+    for(int i=0;i<nFieldNum;i++)
+    {
+        RecordEntity* re=arrRe.value(i);
+        for(int i = 0; i < nFieldNum; i++)
+        {
+            FieldEntity* pField = te->GetFieldAt(i);
+
+            if(pField!=NULL)
+            {
+                // Get the value of the field, the data type is QString. Before you save the need for type conversion
+                QString strFieldName = pField->GetName();
+                QString strVal = re->Get(strFieldName);
+
+                // Get to the data type of the field.
+                out << strVal << " ";
+            }
+
+        }
+        out<<"\r\n";
+    }
+
+    // Close file
+    trdFile.flush();
+    trdFile.close();
+    return true;
+
+}
+
+/**
+ * @brief TableDataOps::delTable
+ * @param arrtab
+ * @param tbFilePath .tb文件夹
+ * @param DirPath 表格文件夹
+ * @return
+ */
+bool TableDataOps::delTable(TABLEARR &arrtab,const QString tbFilePath,const QString DirPath)
+{
+    /*
+     * 清空文件夹
+     */
+    FileLogic fl;
+    fl.DeleteDirectory(fl.GetAbsolutePath(DirPath));
+
+    /*
+     *  .tb文件夹中删除表信息
+     */
+    QFile file(tbFilePath);
+    QDataStream out(&file);
+    file.open(QIODevice::Truncate|QIODevice::WriteOnly);
+
+
+    char *c_Crtime=new char[256];
+    char *c_Mtime=new char[256];
+    //遍历TABLEARR
+    for(int i=0;i<arrtab.size();i++)
+    {
+        TableEntity* te=arrtab.value(i);
+        if(te!=NULL)
+        {
+            TableBlock tb = te->GetBlock();
+            strcpy(c_Crtime,tb.crtime.toString("yyyy-MM-dd hh:mm:ss").toLatin1().data());
+            strcpy(c_Mtime,tb.mtime.toString("yyyy-MM-dd hh:mm:ss").toLatin1().data());
+            out << tb.name<<tb.record_num<<tb.field_num<<tb.tdf<<tb.trd<<c_Crtime<<c_Mtime;
+        }
+    }
+    delete c_Crtime; //释放内存
+    delete c_Mtime;
+    file.close();
+    return true;
+
+}
+

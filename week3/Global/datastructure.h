@@ -27,7 +27,6 @@ struct TableBlock
     INTEGER field_num;	// Field number
     VARCHAR tdf;		// Path of the table definition file
     VARCHAR trd;		// Path of the record file
-    VARCHAR tic;        //约束文件目录
     DATETIME crtime;	// Table creation time
     DATETIME mtime;		// Last modification time
 };

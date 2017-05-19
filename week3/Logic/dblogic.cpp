@@ -68,3 +68,6 @@ bool DBLogic::GetDatabases(DBARR &m_arrDB)
 
     return false;
 }
+bool DBLogic::RenameDatabase(DBEntity &oldDb,DBEntity &newDb){
+    return DB_Ops.ReName(oldDb,newDb);
+}
