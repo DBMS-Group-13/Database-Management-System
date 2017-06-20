@@ -1,0 +1,27 @@
+<RCC>
+    <qresource prefix="/Login/gif">
+        <file>resources/LoginB.gif</file>
+    </qresource>
+    <qresource prefix="/login/button">
+        <file>resources/close.jpg</file>
+        <file>resources/close_hover.jpg</file>
+        <file>resources/close_press.jpg</file>
+        <file>resources/sign.jpg</file>
+        <file>resources/sign_hover.jpg</file>
+        <file>resources/sign_press.jpg</file>
+    </qresource>
+    <qresource prefix="/login/jpg">
+        <file>resources/logo.png</file>
+    </qresource>
+    <qresource prefix="/mainWindow/jpg">
+        <file>resources/mainTitle.jpg</file>
+        <file>resources/status.jpg</file>
+    </qresource>
+    <qresource prefix="/mainWindow/png">
+        <file>resources/titleText.png</file>
+        <file>resources/open.png</file>
+        <file>resources/open_hover.png</file>
+        <file>resources/create.png</file>
+        <file>resources/create_hover.png</file>
+    </qresource>
+</RCC>
